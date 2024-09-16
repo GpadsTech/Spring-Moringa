@@ -1,6 +1,7 @@
 package com.gpads.moringa.entities;
 
-import java.sql.Date;
+import java.util.Date;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
+import java.text.SimpleDateFormat;
 
 @Entity
 public class PlacaOutPut {
@@ -33,6 +36,9 @@ public class PlacaOutPut {
     
     public Date getDataHora() {
         return dataHora;
+    }
+    public String getDataHoraString(){
+        return new SimpleDateFormat("HH:mm dd/MM/yyyy").format(this.dataHora);
     }
     public void setDataHora(Date dataHora) {
         this.dataHora = dataHora;
