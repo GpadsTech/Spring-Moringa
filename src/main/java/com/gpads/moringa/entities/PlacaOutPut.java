@@ -33,7 +33,23 @@ public class PlacaOutPut {
     @JoinColumn(nullable = false, name = "placa_id")
     private Placa placa;
 
+    public PlacaOutPut(){}
+
     
+    public PlacaOutPut(Date dataHora, float temperatura, float umidade, float pressao, float luminosidade, float cO2,
+            float qualidadeDoAr, float velocidadeDoVento, float voltagem, float rpm, Placa placa) {
+        this.dataHora = dataHora;
+        this.temperatura = temperatura;
+        this.umidade = umidade;
+        this.pressao = pressao;
+        this.luminosidade = luminosidade;
+        this.cO2 = cO2;
+        this.qualidadeDoAr = qualidadeDoAr;
+        this.velocidadeDoVento = velocidadeDoVento;
+        this.voltagem = voltagem;
+        this.rpm = rpm;
+        this.placa = placa;
+    }
     public Date getDataHora() {
         return dataHora;
     }

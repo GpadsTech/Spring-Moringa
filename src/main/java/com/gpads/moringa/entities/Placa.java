@@ -12,10 +12,19 @@ public class Placa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    public long getId() {
+        return id;
+    }
     private String modelo;
     private float latitude;
     private float longitude;
 
+    public Placa(){}
+    public Placa(String modelo, float latitude, float longitude) {
+        this.modelo = modelo;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
     public String getModelo() {
         return modelo;
     }
