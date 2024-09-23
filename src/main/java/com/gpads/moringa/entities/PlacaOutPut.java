@@ -2,6 +2,7 @@ package com.gpads.moringa.entities;
 
 import java.util.Date;
 
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +13,8 @@ import jakarta.persistence.ManyToOne;
 
 import java.text.SimpleDateFormat;
 
-@Entity
+//@Entity
+@Document("placaOutPut")
 public class PlacaOutPut {
 
     @Id

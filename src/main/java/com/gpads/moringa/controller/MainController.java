@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gpads.moringa.entities.Placa;
 import com.gpads.moringa.entities.PlacaOutPut;
 import com.gpads.moringa.repositories.PlacaOutPutRepository;
+import com.gpads.moringa.repositories.PlacaOutPutRepositoryMongoDB;
 import com.gpads.moringa.repositories.PlacaRepository;
+import com.gpads.moringa.repositories.PlacaRepositoryMongoDB;
 
 import jakarta.annotation.PostConstruct;
 
@@ -28,12 +30,20 @@ public class MainController {
 
 	@Autowired
 	PlacaOutPutRepository placaOutPutRepository;
+
+	@Autowired
+	PlacaOutPutRepositoryMongoDB placaOutPutRepositoryMongoDB;
+
+	@Autowired
+	PlacaRepositoryMongoDB placaRepositoryMongoDB;
 	
 
 	@RequestMapping("/findLatestDataByPlacaId/{idPlaca}")
 	public ResponseEntity<PlacaOutPut> lastData(@PathVariable("idPlaca") Long idPlaca) {
 
-		List<PlacaOutPut> resource = placaOutPutRepository.findLatestByPlacaId(idPlaca);
+		//List<PlacaOutPut> resource = placaOutPutRepository.findLatestByPlacaId(idPlaca);
+		List<PlacaOutPut> resource = placaOutPutRepositoryMongoDB.findLatestByPlacaId(idPlaca);
+		
 
 		if (resource != null)
 			return ResponseEntity.ok(resource.get(0));
@@ -49,7 +59,8 @@ public class MainController {
 		Date starD = Date.from(Instant.parse(startDate));
 		Date endD = Date.from(Instant.parse(endDate));
 
-		List<PlacaOutPut> resourceList = placaOutPutRepository.findByPlacaIdAndDateRange(idPlaca, starD, endD);
+		//List<PlacaOutPut> resourceList = placaOutPutRepository.findByPlacaIdAndDateRange(idPlaca, starD, endD);
+		List<PlacaOutPut> resourceList = placaOutPutRepositoryMongoDB.findByPlacaIdAndDateRange(idPlaca, starD, endD);
 
 		if (resourceList != null) {
 			return ResponseEntity.ok(resourceList);
@@ -60,7 +71,8 @@ public class MainController {
 	@RequestMapping("/allReadPlaca")
 	public ResponseEntity<List<Placa>> requestMethodName() {
 
-		List<Placa> resourceList = placaRepository.findAll();
+		//List<Placa> resourceList = placaRepository.findAll();
+		List<Placa> resourceList = placaRepositoryMongoDB.findAll();
 
 		if (resourceList != null) {
 			return ResponseEntity.ok(resourceList);

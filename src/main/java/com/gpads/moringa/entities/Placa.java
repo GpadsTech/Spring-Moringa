@@ -1,11 +1,14 @@
 package com.gpads.moringa.entities;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity
+//@Entity
+@Document("placa")
 public class Placa {
 
     @Id
@@ -18,7 +21,7 @@ public class Placa {
     private String modelo;
     private float latitude;
     private float longitude;
-
+    
     public Placa(){}
     public Placa(String modelo, float latitude, float longitude) {
         this.modelo = modelo;
