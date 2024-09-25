@@ -2,14 +2,10 @@ package com.gpads.moringa.entities;
 
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 
 import java.text.SimpleDateFormat;
 
@@ -18,7 +14,6 @@ import java.text.SimpleDateFormat;
 public class PlacaOutPut {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     private Date dataHora;
     private float temperatura;
@@ -31,8 +26,6 @@ public class PlacaOutPut {
     private float voltagem;
     private float rpm;
 
-    @ManyToOne
-    @JoinColumn(nullable = false, name = "placa_id")
     private Placa placa;
 
     public PlacaOutPut(){}
