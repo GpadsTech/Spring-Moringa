@@ -16,4 +16,7 @@ public class PlacaService {
     public List<Placa> findAll(){
         return placaRepositoryMongoDB.findAll();
     }
+    public void save(Placa entity){
+        placaRepositoryMongoDB.save(entity);
+    }
 }
