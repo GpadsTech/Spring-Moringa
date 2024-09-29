@@ -8,6 +8,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ import com.gpads.moringa.service.PlacaOutPutService;
 import com.gpads.moringa.service.PlacaService;
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api")
 public class MainController {
@@ -45,7 +46,7 @@ public class MainController {
 		return ResponseEntity.notFound().build();
 	}
 
-	@RequestMapping("/findByPlacaIdAndDateRange/{idPlaca}/{startDate}/{endDate}")
+	@GetMapping("/findByPlacaIdAndDateRange/{idPlaca}/{startDate}/{endDate}")
 	public ResponseEntity<List<PlacaOutPut>> findByPlacaIdAndDateRange(@PathVariable("idPlaca") ObjectId idPlaca,
 			@PathVariable("startDate") String startDate,
 			@PathVariable("endDate") String endDate) {
@@ -53,7 +54,7 @@ public class MainController {
 		Date starD = Date.from(Instant.parse(startDate));
 		Date endD = Date.from(Instant.parse(endDate));
 
-		//List<PlacaOutPut> resourceList = placaOutPutRepository.findByPlacaIdAndDateRange(idPlaca, starD, endD);
+		
 		List<PlacaOutPut> resourceList = placaOutPutService.findByPlacaIdAndDateRange(idPlaca, starD, endD);
 
 		if (resourceList != null) {
