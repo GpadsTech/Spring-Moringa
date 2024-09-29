@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,6 +16,7 @@ import com.gpads.moringa.entities.Placa;
 import com.gpads.moringa.entities.PlacaOutPut;
 import com.gpads.moringa.service.PlacaOutPutService;
 import com.gpads.moringa.service.PlacaService;
+
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -31,7 +33,7 @@ public class MainController {
 	
 
 	@RequestMapping("/findLatestDataByPlacaId/{idPlaca}")
-	public ResponseEntity<PlacaOutPut> lastData(@PathVariable("idPlaca") Long idPlaca) {
+	public ResponseEntity<PlacaOutPut> lastData(@PathVariable("idPlaca") ObjectId idPlaca) {
 
 		//List<PlacaOutPut> resource = placaOutPutRepository.findLatestByPlacaId(idPlaca);
 		PlacaOutPut resource = placaOutPutService.findLatestByPlacaId(idPlaca);
@@ -44,7 +46,7 @@ public class MainController {
 	}
 
 	@RequestMapping("/findByPlacaIdAndDateRange/{idPlaca}/{startDate}/{endDate}")
-	public ResponseEntity<List<PlacaOutPut>> findByPlacaIdAndDateRange(@PathVariable("idPlaca") Long idPlaca,
+	public ResponseEntity<List<PlacaOutPut>> findByPlacaIdAndDateRange(@PathVariable("idPlaca") ObjectId idPlaca,
 			@PathVariable("startDate") String startDate,
 			@PathVariable("endDate") String endDate) {
 
@@ -86,5 +88,26 @@ public class MainController {
 		}
 		return ResponseEntity.notFound().build();
 	}
+
+	@RequestMapping("/placaAll")
+	public ResponseEntity<List<Placa>> placaReadAll(){
+		List<Placa> resourList = placaService.findAll();
+		if(resourList != null){
+			return ResponseEntity.ok(resourList);
+		}
+		return ResponseEntity.notFound().build();
+	}
+	@RequestMapping("/placaOutPutAll")
+	public ResponseEntity<List<PlacaOutPut>> placaOutPutReadAll() {
+    
+
+		List<PlacaOutPut> resourList = placaOutPutService.findAll();
+
+		if(resourList != null){
+			return ResponseEntity.ok(resourList);
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
 
 }

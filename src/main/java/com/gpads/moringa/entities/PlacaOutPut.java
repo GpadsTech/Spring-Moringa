@@ -1,20 +1,22 @@
 package com.gpads.moringa.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-
-import java.text.SimpleDateFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 //@Entity
 @Document("placaOutPut")
 public class PlacaOutPut {
 
     @Id
-    private long id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId id;
     private Date dataHora;
     private float temperatura;
     private float umidade;

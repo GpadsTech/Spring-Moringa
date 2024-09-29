@@ -1,8 +1,11 @@
 package com.gpads.moringa.entities;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 
 //@Entity
@@ -10,11 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Placa {
 
     @Id
-    private long id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId id;
 
-    public long getId() {
-        return id;
-    }
     private String modelo;
     private float latitude;
     private float longitude;
@@ -24,6 +25,9 @@ public class Placa {
         this.modelo = modelo;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+    public ObjectId getId() {
+        return id;
     }
     public String getModelo() {
         return modelo;
