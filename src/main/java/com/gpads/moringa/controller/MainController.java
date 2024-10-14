@@ -36,7 +36,6 @@ public class MainController {
 	@RequestMapping("/findLatestDataByPlacaId/{idPlaca}")
 	public ResponseEntity<PlacaOutPut> lastData(@PathVariable("idPlaca") ObjectId idPlaca) {
 
-		//List<PlacaOutPut> resource = placaOutPutRepository.findLatestByPlacaId(idPlaca);
 		PlacaOutPut resource = placaOutPutService.findLatestByPlacaId(idPlaca);
 		
 
@@ -64,9 +63,7 @@ public class MainController {
 	}
 
 	@RequestMapping("/allReadPlaca")
-	public ResponseEntity<List<Placa>> allReadPlaca() {
-
-		//List<Placa> resourceList = placaRepository.findAll();
+	public ResponseEntity<List<Placa>> allReadPlaca(){
 		List<Placa> resourceList = placaService.findAll();
 
 		if (resourceList != null) {

@@ -19,18 +19,8 @@ public class PlacaService {
     public void save(Placa entity){
         placaRepositoryMongoDB.save(entity);
     }
-    public void criarPlacas() {
-        Placa placa1 = new Placa("GPADS-MoRHInGa AM1", -7.9917f, -38.2981f);  // Serra Talhada
-        Placa placa2 = new Placa("GPADS-MoRHInGa AM1", -8.2845f, -35.9691f);  // Caruaru
-        Placa placa3 = new Placa("GPADS-MoRHInGa AM1", -9.3887f, -40.5027f);  // Petrolina
-        Placa placa4 = new Placa("GPADS-MoRHInGa AM1", -8.8823f, -36.4968f);  // Garanhuns
-        Placa placa5 = new Placa("GPADS-MoRHInGa AM1", -8.0476f, -34.8770f);  // Recife 
-    
-        placaRepositoryMongoDB.save(placa1);
-        placaRepositoryMongoDB.save(placa2);
-        placaRepositoryMongoDB.save(placa3);
-        placaRepositoryMongoDB.save(placa4);
-        placaRepositoryMongoDB.save(placa5); 
+    public Placa findByLatLong(float lat, float log){
+        return placaRepositoryMongoDB.findByLatLong(lat, log);
     }
     
 }

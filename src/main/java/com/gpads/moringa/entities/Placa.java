@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 
 //@Entity
-@Document("placa")
+@Document("placaMoringa")
 public class Placa {
 
     @Id

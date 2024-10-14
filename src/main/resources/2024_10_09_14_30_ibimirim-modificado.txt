@@ -1,0 +1,492 @@
+
+2024/10/07 16:29:11
+Temperatura:30.83ºC
+Umidade:32.74%
+Pressão:952.6299hPa
+Luz:7lx
+Gás:5.5
+Ar:8.9
+Velocidade do vento:0
+Voltagem:0.864
+Rpm:0.0
+
+
+2024/10/07 16:31:28
+Temperatura:30.81ºC
+Umidade:32.59%
+Pressão:952.71hPa
+Luz:7lx
+Gás:5.5
+Ar:8.9
+Velocidade do vento:0
+Voltagem:0.864
+Rpm:0.0
+
+
+2024/10/07 16:33:45
+Temperatura:30.72ºC
+Umidade:33.06%
+Pressão:952.93hPa
+Luz:7lx
+Gás:5.5
+Ar:8.9
+Velocidade do vento:0
+Voltagem:0.864
+Rpm:0.0
+
+
+2024/10/07 16:36:02
+Temperatura:30.55ºC
+Umidade:33.19%
+Pressão:953.22hPa
+Luz:7lx
+Gás:5.4
+Ar:8.7
+Velocidade do vento:0
+Voltagem:0.864
+Rpm:0.0
+
+
+2159/12/31 21:00:49
+Temperatura:30.69ºC
+Umidade:34.04%
+Pressão:953.01hPa
+Luz:6lx
+Gás:5.5
+Ar:9.0
+Velocidade do vento:42
+Voltagem:0.8679999
+Rpm:504.0
+
+
+2159/12/31 21:03:06
+Temperatura:30.59ºC
+Umidade:33.08%
+Pressão:953.14hPa
+Luz:6lx
+Gás:5.9
+Ar:9.5
+Velocidade do vento:34
+Voltagem:0.8679999
+Rpm:408.0
+
+
+2159/12/31 21:05:23
+Temperatura:30.73ºC
+Umidade:34.29%
+Pressão:952.9799hPa
+Luz:8lx
+Gás:5.8
+Ar:10.3
+Velocidade do vento:0
+Voltagem:0.8679999
+Rpm:0.0
+
+
+2159/12/31 21:07:40
+Temperatura:31.09ºC
+Umidade:30.17%
+Pressão:952.58hPa
+Luz:1292lx
+Gás:6.9
+Ar:10.3
+Velocidade do vento:139
+Voltagem:0.864
+Rpm:1668.0
+
+
+2159/12/31 21:09:57
+Temperatura:31.83ºC
+Umidade:28.6%
+Pressão:951.4199hPa
+Luz:1906lx
+Gás:6.5
+Ar:10.5
+Velocidade do vento:39
+Voltagem:0.864
+Rpm:468.0
+
+
+2159/12/31 21:12:15
+Temperatura:32.37ºC
+Umidade:27.9%
+Pressão:950.62hPa
+Luz:1380lx
+Gás:6.5
+Ar:11.1
+Velocidade do vento:184
+Voltagem:0.864
+Rpm:2208.0
+
+
+2159/12/31 21:14:32
+Temperatura:32.77ºC
+Umidade:27.59%
+Pressão:950.06hPa
+Luz:1990lx
+Gás:6.6
+Ar:10.7
+Velocidade do vento:500
+Voltagem:0.864
+Rpm:5976.0
+
+
+2159/12/31 21:16:49
+Temperatura:32.98ºC
+Umidade:26.99%
+Pressão:949.77hPa
+Luz:1293lx
+Gás:6.2
+Ar:10.9
+Velocidade do vento:0
+Voltagem:0.864
+Rpm:0.0
+
+
+2159/12/31 21:19:05
+Temperatura:33.03ºC
+Umidade:27.05%
+Pressão:949.6099hPa
+Luz:1310lx
+Gás:6.7
+Ar:10.7
+Velocidade do vento:36
+Voltagem:0.864
+Rpm:432.0
+
+
+2159/12/31 21:21:22
+Temperatura:33.11ºC
+Umidade:26.82%
+Pressão:949.5hPa
+Luz:1227lx
+Gás:6.6
+Ar:11.0
+Velocidade do vento:78
+Voltagem:0.864
+Rpm:936.0
+
+
+2159/12/31 21:23:41
+Temperatura:33.1ºC
+Umidade:27.48%
+Pressão:949.58hPa
+Luz:1115lx
+Gás:6.8
+Ar:10.7
+Velocidade do vento:125
+Voltagem:0.864
+Rpm:1500.0
+
+
+2159/12/31 21:26:00
+Temperatura:33.07ºC
+Umidade:27.41%
+Pressão:949.58hPa
+Luz:1054lx
+Gás:6.6
+Ar:10.9
+Velocidade do vento:94
+Voltagem:0.864
+Rpm:1128.0
+
+
+2159/12/31 21:28:17
+Temperatura:33.01ºC
+Umidade:26.93%
+Pressão:949.69hPa
+Luz:944lx
+Gás:6.6
+Ar:10.8
+Velocidade do vento:404
+Voltagem:0.864
+Rpm:4836.0
+
+
+2159/12/31 21:30:35
+Temperatura:32.9ºC
+Umidade:27.75%
+Pressão:949.9hPa
+Luz:780lx
+Gás:6.7
+Ar:10.8
+Velocidade do vento:166
+Voltagem:0.864
+Rpm:1992.0
+
+
+2159/12/31 21:32:53
+Temperatura:32.79ºC
+Umidade:28.0%
+Pressão:950.1699hPa
+Luz:690lx
+Gás:6.6
+Ar:12.1
+Velocidade do vento:80
+Voltagem:0.864
+Rpm:959.9999
+
+
+2159/12/31 21:35:13
+Temperatura:32.65ºC
+Umidade:27.7%
+Pressão:950.33hPa
+Luz:600lx
+Gás:6.3
+Ar:10.7
+Velocidade do vento:94
+Voltagem:0.864
+Rpm:1128.0
+
+
+2159/12/31 21:37:30
+Temperatura:32.56ºC
+Umidade:27.99%
+Pressão:950.49hPa
+Luz:517lx
+Gás:6.6
+Ar:10.9
+Velocidade do vento:33
+Voltagem:0.864
+Rpm:396.0
+
+
+2159/12/31 21:39:47
+Temperatura:32.41ºC
+Umidade:28.2%
+Pressão:950.78hPa
+Luz:431lx
+Gás:6.7
+Ar:10.8
+Velocidade do vento:50
+Voltagem:0.8679999
+Rpm:600.0
+
+
+2024/10/08 03:23:54
+Temperatura:21.85ºC
+Umidade:84.32%
+Pressão:970.38hPa
+Luz:3lx
+Gás:5.2
+Ar:8.4
+Velocidade do vento:0
+Voltagem:0.8719999
+Rpm:0.0
+
+
+2024/10/08 03:26:11
+Temperatura:21.95ºC
+Umidade:83.62%
+Pressão:970.2299hPa
+Luz:3lx
+Gás:5.1
+Ar:8.4
+Velocidade do vento:30
+Voltagem:0.8719999
+Rpm:360.0
+
+
+2024/10/08 03:28:28
+Temperatura:22.04ºC
+Umidade:82.7%
+Pressão:970.15hPa
+Luz:3lx
+Gás:5.2
+Ar:8.4
+Velocidade do vento:0
+Voltagem:0.8719999
+Rpm:0.0
+
+
+2024/10/08 03:31:57
+Temperatura:22.18ºC
+Umidade:81.34%
+Pressão:969.89hPa
+Luz:3lx
+Gás:5.2
+Ar:8.5
+Velocidade do vento:56
+Voltagem:0.876
+Rpm:672.0
+
+
+2024/10/08 03:34:14
+Temperatura:22.26ºC
+Umidade:81.02%
+Pressão:969.81hPa
+Luz:3lx
+Gás:5.8
+Ar:8.6
+Velocidade do vento:0
+Voltagem:0.8719999
+Rpm:0.0
+
+
+2024/10/08 03:36:31
+Temperatura:22.33ºC
+Umidade:80.42%
+Pressão:969.74hPa
+Luz:3lx
+Gás:5.1
+Ar:8.4
+Velocidade do vento:67
+Voltagem:0.8719999
+Rpm:804.0
+
+
+2024/10/08 03:38:47
+Temperatura:22.37ºC
+Umidade:80.07%
+Pressão:969.71hPa
+Luz:3lx
+Gás:5.1
+Ar:8.4
+Velocidade do vento:0
+Voltagem:0.876
+Rpm:0.0
+
+
+2024/10/08 03:41:05
+Temperatura:22.41ºC
+Umidade:79.59%
+Pressão:969.58hPa
+Luz:3lx
+Gás:5.2
+Ar:8.6
+Velocidade do vento:0
+Voltagem:0.8719999
+Rpm:0.0
+
+
+2024/10/08 03:43:25
+Temperatura:22.45ºC
+Umidade:79.11%
+Pressão:969.56hPa
+Luz:3lx
+Gás:5.3
+Ar:8.5
+Velocidade do vento:145
+Voltagem:0.8719999
+Rpm:1740.0
+
+
+2024/10/08 03:45:43
+Temperatura:22.48ºC
+Umidade:78.74%
+Pressão:969.56hPa
+Luz:3lx
+Gás:5.3
+Ar:8.5
+Velocidade do vento:42
+Voltagem:0.8719999
+Rpm:504.0
+
+
+2024/10/08 03:48:00
+Temperatura:22.49ºC
+Umidade:78.62%
+Pressão:969.58hPa
+Luz:3lx
+Gás:5.2
+Ar:8.5
+Velocidade do vento:84
+Voltagem:0.8719999
+Rpm:1008.0
+
+
+2024/10/08 03:50:17
+Temperatura:22.51ºC
+Umidade:78.3%
+Pressão:969.56hPa
+Luz:3lx
+Gás:5.2
+Ar:8.5
+Velocidade do vento:127
+Voltagem:0.8719999
+Rpm:1524.0
+
+
+2024/10/08 03:52:33
+Temperatura:22.52ºC
+Umidade:78.3%
+Pressão:969.56hPa
+Luz:3lx
+Gás:5.7
+Ar:8.6
+Velocidade do vento:3
+Voltagem:0.8719999
+Rpm:36.0
+
+
+2024/10/08 03:54:50
+Temperatura:22.55ºC
+Umidade:77.82%
+Pressão:969.51hPa
+Luz:3lx
+Gás:5.5
+Ar:8.4
+Velocidade do vento:1
+Voltagem:0.8719999
+Rpm:12.0
+
+
+2024/10/08 03:57:07
+Temperatura:22.57ºC
+Umidade:77.38%
+Pressão:969.51hPa
+Luz:3lx
+Gás:5.2
+Ar:8.5
+Velocidade do vento:6
+Voltagem:0.8719999
+Rpm:72.0
+
+
+2024/10/08 03:59:24
+Temperatura:22.58ºC
+Umidade:77.4%
+Pressão:969.51hPa
+Luz:3lx
+Gás:5.2
+Ar:8.3
+Velocidade do vento:39
+Voltagem:0.8719999
+Rpm:468.0
+
+
+2024/10/08 04:01:41
+Temperatura:22.57ºC
+Umidade:77.2%
+Pressão:969.5399hPa
+Luz:3lx
+Gás:5.2
+Ar:8.4
+Velocidade do vento:142
+Voltagem:0.8719999
+Rpm:1704.0
+
+
+2024/10/08 17:27:40
+Temperatura:31.27ºC
+Umidade:38.0%
+Pressão:957.39hPa
+Luz:128lx
+Gás:5.5
+Ar:8.9
+Velocidade do vento:0
+Voltagem:0.86
+Rpm:0.0
+
+
+2024/10/08 17:29:26
+Temperatura:31.26ºC
+Umidade:38.03%
+Pressão:957.34hPa
+Luz:129lx
+Gás:5.5
+Ar:8.9
+Velocidade do vento:0
+Voltagem:0.852
+Rpm:0.0
+

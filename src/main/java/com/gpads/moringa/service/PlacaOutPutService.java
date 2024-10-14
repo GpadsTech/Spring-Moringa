@@ -1,5 +1,11 @@
 package com.gpads.moringa.service;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +27,10 @@ public class PlacaOutPutService {
 
     @Autowired
     PlacaService placaService;
+
+    public void save(PlacaOutPut entity){
+        placaOutPutRepositoryMongoDB.save(entity);
+    }
 
     public PlacaOutPut findLatestByPlacaId(ObjectId id) {
         return placaOutPutRepositoryMongoDB.findLatestByPlacaId(id).get(0);
@@ -75,5 +85,50 @@ public class PlacaOutPutService {
     }
     private float gerarValorAleatorio(float min, float max, Random random) {
         return min + random.nextFloat() * (max - min);
+    }
+
+
+    public List<PlacaOutPut> converterTxtParaPlacaOutPut(String filePath, Placa placa) throws ParseException {
+        List<PlacaOutPut> registros = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            Date dataHora = null;
+            float temperatura = 0, umidade = 0, pressao = 0, luminosidade = 0, co2 = 0, qualidadeDoAr = 0, velocidadeDoVento = 0, voltagem = 0, rpm = 0;
+
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+
+                if (line.matches("\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+                    dataHora = dateFormat.parse(line);
+                } else if (line.startsWith("Temperatura:")) {
+                    temperatura = Float.parseFloat(line.split(":")[1].replace("ºC", ""));
+                } else if (line.startsWith("Umidade:")) {
+                    umidade = Float.parseFloat(line.split(":")[1].replace("%", ""));
+                } else if (line.startsWith("Pressão:")) {
+                    pressao = Float.parseFloat(line.split(":")[1].replace("hPa", ""));
+                } else if (line.startsWith("Luz:")) {
+                    luminosidade = Float.parseFloat(line.split(":")[1].replace("lx", ""));
+                } else if (line.startsWith("Gás:")) {
+                    co2 = Float.parseFloat(line.split(":")[1].replace(",", "."));
+                } else if (line.startsWith("Ar:")) {
+                    qualidadeDoAr = Float.parseFloat(line.split(":")[1].replace(",", "."));
+                } else if (line.startsWith("Velocidade do vento:")) {
+                    velocidadeDoVento = Float.parseFloat(line.split(":")[1]);
+                } else if (line.startsWith("Voltagem:")) {
+                    voltagem = Float.parseFloat(line.split(":")[1]);
+                } else if (line.startsWith("Rpm:")) {
+                    rpm = Float.parseFloat(line.split(":")[1]);
+
+                    PlacaOutPut registro = new PlacaOutPut(dataHora, temperatura, umidade, pressao, luminosidade, co2, qualidadeDoAr, velocidadeDoVento, voltagem, rpm, placa);
+                    registros.add(registro);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return registros;
     }
 }
