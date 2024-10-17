@@ -40,7 +40,7 @@ public class AnaliseService {
                 analise.setModa(moda(valores));
                 analise.setMediana(mediana(valores));
                 analise.setQ1(q1(valores));
-                analise.setQ2(q2(valores));
+                analise.setq3(q3(valores));
 
                 mapaDados.put(campo, analise);
             }
@@ -132,7 +132,7 @@ public class AnaliseService {
         }
     }
 
-    public float q2(List<Float> d) {
+    public float q3(List<Float> d) {
         if (d.size() == 1) {
             return d.get(0);
         }
@@ -140,12 +140,12 @@ public class AnaliseService {
             return d.get(1);
         }
         Collections.sort(d);
-        double q2Aux = 0.75 * (d.size() + 1);
-        if (q2Aux % 1 == 0) {
-            return d.get((int) q2Aux - 1);
+        double q3Aux = 0.75 * (d.size() + 1);
+        if (q3Aux % 1 == 0) {
+            return d.get((int) q3Aux - 1);
         } else {
-            int indexInferior = (int) Math.floor(q2Aux) - 1;
-            int indexSuperior = (int) Math.ceil(q2Aux) - 1;
+            int indexInferior = (int) Math.floor(q3Aux) - 1;
+            int indexSuperior = (int) Math.ceil(q3Aux) - 1;
             float valorInferior = d.get(indexInferior);
             float valorSuperior = d.get(indexSuperior);
             return (valorInferior + valorSuperior) / 2;

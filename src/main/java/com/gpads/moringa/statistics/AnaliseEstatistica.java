@@ -7,18 +7,18 @@ public class AnaliseEstatistica {
     private List<Float> moda;
     private List<Float> mediana;
     private float q1;
-    private float q2;
+    private float q3;
 
 
     public AnaliseEstatistica() {
     }
 
-    public AnaliseEstatistica(float media, List<Float> moda, List<Float> mediana, float q1, float q2) {
+    public AnaliseEstatistica(float media, List<Float> moda, List<Float> mediana, float q1, float q3) {
         this.media = media;
         this.moda = moda;
         this.mediana = mediana;
         this.q1 = q1;
-        this.q2 = q2;
+        this.q3 = q3;
     }
 
 
@@ -54,12 +54,12 @@ public class AnaliseEstatistica {
         this.q1 = q1;
     }
 
-    public float getQ2() {
-        return this.q2;
+    public float getq3() {
+        return this.q3;
     }
 
-    public void setQ2(float q2) {
-        this.q2 = q2;
+    public void setq3(float q3) {
+        this.q3 = q3;
     }
     
 
