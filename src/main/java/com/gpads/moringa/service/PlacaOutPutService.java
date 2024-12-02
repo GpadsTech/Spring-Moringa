@@ -2,7 +2,6 @@ package com.gpads.moringa.service;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gpads.moringa.entities.Placa;
@@ -22,11 +20,16 @@ import com.gpads.moringa.repositories.PlacaOutPutRepositoryMongoDB;
 @Service
 public class PlacaOutPutService {
 
-    @Autowired
-    PlacaOutPutRepositoryMongoDB placaOutPutRepositoryMongoDB;
+    
+    private final PlacaOutPutRepositoryMongoDB placaOutPutRepositoryMongoDB;
 
-    @Autowired
-    PlacaService placaService;
+    
+    private final PlacaService placaService;
+
+    public PlacaOutPutService(PlacaOutPutRepositoryMongoDB placaOutPutRepositoryMongoDB, PlacaService placaService) {
+        this.placaOutPutRepositoryMongoDB = placaOutPutRepositoryMongoDB;
+        this.placaService = placaService;
+    }
 
     public void save(PlacaOutPut entity){
         placaOutPutRepositoryMongoDB.save(entity);
@@ -95,7 +98,15 @@ public class PlacaOutPutService {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             Date dataHora = null;
-            float temperatura = 0, umidade = 0, pressao = 0, luminosidade = 0, co2 = 0, qualidadeDoAr = 0, velocidadeDoVento = 0, voltagem = 0, rpm = 0;
+            float temperatura = 0;
+            float  umidade = 0;
+            float  pressao = 0;
+            float  luminosidade = 0;
+            float  co2 = 0;
+            float  qualidadeDoAr = 0;
+            float  velocidadeDoVento = 0;
+            float  voltagem = 0;
+            float  rpm;
 
             while ((line = br.readLine()) != null) {
                 line = line.trim();
@@ -126,7 +137,8 @@ public class PlacaOutPutService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error: "+e.getMessage());
+            e.printStackTrace(System.err);
         }
 
         return registros;

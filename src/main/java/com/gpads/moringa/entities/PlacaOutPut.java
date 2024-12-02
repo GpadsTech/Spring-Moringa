@@ -16,6 +16,7 @@ public class PlacaOutPut {
 
     @Id
     @JsonSerialize(using = ToStringSerializer.class)
+    @SuppressWarnings("unused")
     private ObjectId id;
     private Date dataHora;
     private float temperatura;
@@ -33,6 +34,13 @@ public class PlacaOutPut {
     public PlacaOutPut(){}
 
     
+    
+    public PlacaOutPut(Date dataHora, float temperatura, float umidade) {
+        this.dataHora = dataHora;
+        this.temperatura = temperatura;
+        this.umidade = umidade;
+    }
+
     public PlacaOutPut(Date dataHora, float temperatura, float umidade, float pressao, float luminosidade, float cO2,
             float qualidadeDoAr, float velocidadeDoVento, float voltagem, float rpm, Placa placa) {
         this.dataHora = dataHora;
@@ -47,6 +55,12 @@ public class PlacaOutPut {
         this.rpm = rpm;
         this.placa = placa;
     }
+
+    public PlacaOutPut(float temperatura) {
+        this.temperatura = temperatura;
+    }
+
+    
     public Date getDataHora() {
         return dataHora;
     }

@@ -10,8 +10,11 @@ public class Usuario {
     private String email;
     private String senha; //verificar outras estratégias para este armazenamento
     private String nome;
-
-
+    
+    
+    public long getId() {
+        return id;
+    }
     public String getEmail() {
         return email;
     }

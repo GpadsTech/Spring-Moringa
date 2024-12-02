@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,17 +24,23 @@ import com.gpads.moringa.statistics.IntervaloTemporalEstatistico;
 @RestController
 @RequestMapping("/api")
 public class MainController {
+    
+    private final PlacaOutPutService placaOutPutService;
+    
+    private final PlacaService placaService;
+    
+    private final AnaliseService analiseService;
+    
+    public MainController(PlacaOutPutService placaOutPutService, PlacaService placaService,
+            AnaliseService analiseService) {
+        this.placaOutPutService = placaOutPutService;
+        this.placaService = placaService;
+        this.analiseService = analiseService;
+    }
 
-    @Autowired
-    private PlacaOutPutService placaOutPutService;
+   
 
-    @Autowired
-    private PlacaService placaService;
-
-    @Autowired
-    private AnaliseService analiseService;
-
-    @RequestMapping("/findLatestDataByPlacaId/{idPlaca}")
+    @GetMapping("/findLatestDataByPlacaId/{idPlaca}")
     public ResponseEntity<PlacaOutPut> lastData(@PathVariable("idPlaca") ObjectId idPlaca) {
 
         PlacaOutPut resource = placaOutPutService.findLatestByPlacaId(idPlaca);
@@ -78,7 +84,7 @@ public class MainController {
         return ResponseEntity.notFound().build();
     }
 
-    @RequestMapping("/allReadPlaca")
+    @GetMapping("/allReadPlaca")
     public ResponseEntity<List<Placa>> allReadPlaca() {
         List<Placa> resourceList = placaService.findAll();
 
@@ -88,12 +94,12 @@ public class MainController {
         return ResponseEntity.notFound().build();
     }
 
-    @RequestMapping("/cadastroPlaca/{modelo}/{lat}/{lon}")
+    @PostMapping("/cadastroPlaca/{modelo}/{lat}/{lon}")
     public ResponseEntity<List<Placa>> cadastroEbuscarTodasAsPlacas(@PathVariable("modelo") String modelo,
             @PathVariable("lat") String lat,
             @PathVariable("lon") String lon) {
-        Float la = Float.parseFloat(lat);
-        Float lo = Float.parseFloat(lon);
+        Float la = Float.valueOf(lat);
+        Float lo = Float.valueOf(lon);
         Placa p = new Placa(modelo, la, lo);
         placaService.save(p);
         List<Placa> resourList = placaService.findAll();
@@ -103,7 +109,7 @@ public class MainController {
         return ResponseEntity.notFound().build();
     }
 
-    @RequestMapping("/placaAll")
+    @GetMapping("/placaAll")
     public ResponseEntity<List<Placa>> placaReadAll() {
         List<Placa> resourList = placaService.findAll();
         if (resourList != null) {
@@ -112,7 +118,7 @@ public class MainController {
         return ResponseEntity.notFound().build();
     }
 
-    @RequestMapping("/placaOutPutAll")
+    @GetMapping("/placaOutPutAll")
     public ResponseEntity<List<PlacaOutPut>> placaOutPutReadAll() {
 
         List<PlacaOutPut> resourList = placaOutPutService.findAll();

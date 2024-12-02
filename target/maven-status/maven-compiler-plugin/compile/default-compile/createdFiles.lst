@@ -1,9 +1,12 @@
+com\gpads\moringa\statistics\IntervaloTemporalEstatistico.class
 com\gpads\moringa\service\PlacaService.class
 com\gpads\moringa\controller\MainController.class
-com\gpads\moringa\repositories\PlacaRepositoryMongoDB.class
 com\gpads\moringa\entities\Usuario.class
 com\gpads\moringa\entities\Placa.class
-com\gpads\moringa\entities\PlacaOutPut.class
 com\gpads\moringa\service\PlacaOutPutService.class
-com\gpads\moringa\MoringaApplication.class
 com\gpads\moringa\repositories\PlacaOutPutRepositoryMongoDB.class
+com\gpads\moringa\statistics\AnaliseEstatistica.class
+com\gpads\moringa\statistics\AnaliseService.class
+com\gpads\moringa\repositories\PlacaRepositoryMongoDB.class
+com\gpads\moringa\entities\PlacaOutPut.class
+com\gpads\moringa\MoringaApplication.class
