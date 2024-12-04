@@ -64,6 +64,8 @@ public class PlacaOutPutService {
                 float velocidadeDoVento = gerarValorAleatorio(0.0f, 20.0f, random); 
                 float voltagem = gerarValorAleatorio(0.0f, 0.1f, random);   
                 float rpm = gerarValorAleatorio(0.0f, 5000.0f, random);         
+                float ph = gerarValorAleatorio(0.0f, 14.0f, random);         
+                float pluviometria = gerarValorAleatorio(0.0f, 100.0f, random);         
 
                 PlacaOutPut placaOutPut = new PlacaOutPut(
                         calendar.getTime(),
@@ -76,7 +78,9 @@ public class PlacaOutPutService {
                         velocidadeDoVento,
                         voltagem, 
                         rpm,
-                        placa
+                        placa,
+                        ph,
+                        pluviometria
                 );
 
                 placaOutPutRepositoryMongoDB.save(placaOutPut);
@@ -107,6 +111,8 @@ public class PlacaOutPutService {
             float  velocidadeDoVento = 0;
             float  voltagem = 0;
             float  rpm;
+            float  ph = 0;
+            float  pluviometria = 0;
 
             while ((line = br.readLine()) != null) {
                 line = line.trim();
@@ -128,11 +134,15 @@ public class PlacaOutPutService {
                 } else if (line.startsWith("Velocidade do vento:")) {
                     velocidadeDoVento = Float.parseFloat(line.split(":")[1]);
                 } else if (line.startsWith("Voltagem:")) {
-                    voltagem = Float.parseFloat(line.split(":")[1]);
+                    voltagem = Float.parseFloat(line.split(":")[1]);                
+                } else if (line.startsWith("Pluviometria:")) {
+                    pluviometria = Float.parseFloat(line.split(":")[1].replace(",", "."));
+                } else if (line.startsWith("pH:")) {
+                    ph = Float.parseFloat(line.split(":")[1].replace(",", "."));
                 } else if (line.startsWith("Rpm:")) {
                     rpm = Float.parseFloat(line.split(":")[1]);
 
-                    PlacaOutPut registro = new PlacaOutPut(dataHora, temperatura, umidade, pressao, luminosidade, co2, qualidadeDoAr, velocidadeDoVento, voltagem, rpm, placa);
+                    PlacaOutPut registro = new PlacaOutPut(dataHora, temperatura, umidade, pressao, luminosidade, co2, qualidadeDoAr, velocidadeDoVento, voltagem, rpm, placa, ph, pluviometria);
                     registros.add(registro);
                 }
             }

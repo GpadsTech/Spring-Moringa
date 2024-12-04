@@ -1,7 +1,6 @@
 package com.gpads.moringa.statistics;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +31,7 @@ public class AnaliseService {
             Map<String, AnaliseEstatistica> mapaDados = new HashMap<>();
 
             // Campos numéricos para análise
-            String[] campos = {"temperatura", "umidade", "pressao", "luminosidade", "cO2", "qualidadeDoAr", "velocidadeDoVento", "voltagem", "rpm"};
+            String[] campos = {"temperatura", "umidade", "pressao", "luminosidade", "cO2", "qualidadeDoAr", "velocidadeDoVento", "voltagem", "rpm", "ph", "pluviometria"};
 
             for (String campo : campos) {
                 List<Float> valores = extrairValores(dadosIntervalo, campo);
@@ -61,24 +60,19 @@ public class AnaliseService {
         return sdf.format(dataHora);
     }
 
-    @SuppressWarnings("BoxingBoxedValue")
     public List<Float> extrairValores(List<PlacaOutPut> dados, String campo) {
-        try {
-            MethodHandle getter = MethodHandles.lookup()
-                .findGetter(PlacaOutPut.class, campo, Float.class);
-            
-            return dados.stream()
+        return dados.stream()
                 .map(p -> {
                     try {
-                        return (Float) getter.invoke(p);
-                    } catch (Throwable e) {
+                        Field field = PlacaOutPut.class.getDeclaredField(campo);
+                        field.setAccessible(true);
+                        return (Float) field.get(p);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                         return 0f;
                     }
                 })
                 .collect(Collectors.toList());
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            return Collections.emptyList();
-        }
     }
 
     public float media(List<Float> d) {

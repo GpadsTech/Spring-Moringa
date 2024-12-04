@@ -28,7 +28,10 @@ public class PlacaOutPut {
     private float velocidadeDoVento;
     private float voltagem;
     private float rpm;
+    private float ph;
+    private float pluviometria;
 
+    
     private Placa placa;
 
     public PlacaOutPut(){}
@@ -42,7 +45,7 @@ public class PlacaOutPut {
     }
 
     public PlacaOutPut(Date dataHora, float temperatura, float umidade, float pressao, float luminosidade, float cO2,
-            float qualidadeDoAr, float velocidadeDoVento, float voltagem, float rpm, Placa placa) {
+            float qualidadeDoAr, float velocidadeDoVento, float voltagem, float rpm, Placa placa, float ph, float pluviometria) {
         this.dataHora = dataHora;
         this.temperatura = temperatura;
         this.umidade = umidade;
@@ -54,6 +57,8 @@ public class PlacaOutPut {
         this.voltagem = voltagem;
         this.rpm = rpm;
         this.placa = placa;
+        this.ph = ph;
+        this.pluviometria = pluviometria;
     }
 
     public PlacaOutPut(float temperatura) {
@@ -129,6 +134,18 @@ public class PlacaOutPut {
     }
     public void setPlaca(Placa placa) {
         this.placa = placa;
+    }
+    public float getPh() {
+        return ph;
+    }
+    public void setPh(float ph) {
+        this.ph = ph;
+    }
+    public float getPluviometria() {
+        return pluviometria;
+    }
+    public void setPluviometria(float pluviometria) {
+        this.pluviometria = pluviometria;
     }
     
 }
