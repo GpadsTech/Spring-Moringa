@@ -1,5 +1,9 @@
 package com.gpads.moringa.controller;
 
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,15 +18,7 @@ import com.gpads.moringa.repositories.PlacaRepository;
 
 import jakarta.annotation.PostConstruct;
 
-import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-
-@CrossOrigin(
-    origins = "https://interface-morhinga.vercel.app", 
-    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
-    allowedHeaders = "*"
-)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class MainController {
