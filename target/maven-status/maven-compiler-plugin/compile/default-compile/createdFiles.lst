@@ -1,0 +1,8 @@
+com\gpads\moringa\repositories\UsuarioRepository.class
+com\gpads\moringa\controller\MainController.class
+com\gpads\moringa\entities\Usuario.class
+com\gpads\moringa\entities\Placa.class
+com\gpads\moringa\repositories\PlacaRepository.class
+com\gpads\moringa\entities\PlacaOutPut.class
+com\gpads\moringa\MoringaApplication.class
+com\gpads\moringa\repositories\PlacaOutPutRepository.class
