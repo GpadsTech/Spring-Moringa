@@ -18,7 +18,11 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(
+    origins = "https://interface-morhinga.vercel.app", 
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+    allowedHeaders = "*"
+)
 @RestController
 @RequestMapping("/api")
 public class MainController {
