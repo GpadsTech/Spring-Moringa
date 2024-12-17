@@ -1,29 +1,33 @@
 package com.gpads.moringa.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
+
+//@Entity
+@Document("placa")
 public class Placa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId id;
 
-    public long getId() {
-        return id;
-    }
     private String modelo;
     private float latitude;
     private float longitude;
-
+    
     public Placa(){}
     public Placa(String modelo, float latitude, float longitude) {
         this.modelo = modelo;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+    public ObjectId getId() {
+        return id;
     }
     public String getModelo() {
         return modelo;

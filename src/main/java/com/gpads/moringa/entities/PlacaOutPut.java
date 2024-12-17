@@ -1,23 +1,23 @@
 package com.gpads.moringa.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
-import java.text.SimpleDateFormat;
-
-@Entity
+//@Entity
+@Document("placaOutPut")
 public class PlacaOutPut {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    @SuppressWarnings("unused")
+    private ObjectId id;
     private Date dataHora;
     private float temperatura;
     private float umidade;
@@ -28,16 +28,24 @@ public class PlacaOutPut {
     private float velocidadeDoVento;
     private float voltagem;
     private float rpm;
+    private float ph;
+    private float pluviometria;
 
-    @ManyToOne
-    @JoinColumn(nullable = false, name = "placa_id")
+    
     private Placa placa;
 
     public PlacaOutPut(){}
 
     
+    
+    public PlacaOutPut(Date dataHora, float temperatura, float umidade) {
+        this.dataHora = dataHora;
+        this.temperatura = temperatura;
+        this.umidade = umidade;
+    }
+
     public PlacaOutPut(Date dataHora, float temperatura, float umidade, float pressao, float luminosidade, float cO2,
-            float qualidadeDoAr, float velocidadeDoVento, float voltagem, float rpm, Placa placa) {
+            float qualidadeDoAr, float velocidadeDoVento, float voltagem, float rpm, Placa placa, float ph, float pluviometria) {
         this.dataHora = dataHora;
         this.temperatura = temperatura;
         this.umidade = umidade;
@@ -49,7 +57,15 @@ public class PlacaOutPut {
         this.voltagem = voltagem;
         this.rpm = rpm;
         this.placa = placa;
+        this.ph = ph;
+        this.pluviometria = pluviometria;
     }
+
+    public PlacaOutPut(float temperatura) {
+        this.temperatura = temperatura;
+    }
+
+    
     public Date getDataHora() {
         return dataHora;
     }
@@ -118,6 +134,18 @@ public class PlacaOutPut {
     }
     public void setPlaca(Placa placa) {
         this.placa = placa;
+    }
+    public float getPh() {
+        return ph;
+    }
+    public void setPh(float ph) {
+        this.ph = ph;
+    }
+    public float getPluviometria() {
+        return pluviometria;
+    }
+    public void setPluviometria(float pluviometria) {
+        this.pluviometria = pluviometria;
     }
     
 }
