@@ -1,89 +1,106 @@
 package com.gpads.moringa.statisticsTest;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
+import com.gpads.moringa.dto.DadoSensorUnificado;
+import com.gpads.moringa.entities.*;
+import com.gpads.moringa.repositories.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeAll;
+import com.gpads.moringa.statistics.AnaliseService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gpads.moringa.entities.PlacaOutPut;
-import com.gpads.moringa.statistics.AnaliseEstatistica;
-import com.gpads.moringa.statistics.AnaliseService;
-import com.gpads.moringa.statistics.IntervaloTemporalEstatistico;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+
 
 public class AnaliseServiceTest {
-    private static AnaliseService analiseService;
-    private static final List<Float> lista = new ArrayList<>();
 
-    @BeforeAll
-    public static void beforeTest(){
-        analiseService = new AnaliseService();
+    @Mock
+    private SensorDeSoloRepositoryMongoDB sensorDeSoloRepository;
+
+    @Mock
+    private SensorDePhRepositoryMongoDB sensorDePhRepository;
+
+    @Mock
+    private PluviometroRepositoryMongoDB pluviometroRepository;
+
+    @Mock
+    private DadosEstacaoRepositoryMongoDB dadosEstacaoRepository;
+
+    @InjectMocks
+    private AnaliseService analiseService;
+
+    @BeforeEach
+    public void setup() {
+        sensorDeSoloRepository = mock(SensorDeSoloRepositoryMongoDB.class);
+        sensorDePhRepository = mock(SensorDePhRepositoryMongoDB.class);
+        pluviometroRepository = mock(PluviometroRepositoryMongoDB.class);
+        dadosEstacaoRepository = mock(DadosEstacaoRepositoryMongoDB.class);
+
+        analiseService = new AnaliseService(sensorDeSoloRepository, sensorDePhRepository, pluviometroRepository, dadosEstacaoRepository);
+    }
+
+    @Test
+    public void testUnificarDados() {
         
-        lista.addAll(List.of(1.1f, 1.2f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f));
+        // Mocks
+        SensorDeSolo solo = new SensorDeSolo();
+        solo.setData("01/06/2025");
+        solo.setHora("12:00");
+        solo.setTemperatura("25,5");
+        solo.setUmidade("80");
+        solo.setPh("6.2");
 
-    }
-    @Test
-    void testMedia(){
-        float result = analiseService.media(lista);
-        assertEquals(1.42f, result, 0.01f);
-    }
+        SensorDePh sensorPh = new SensorDePh();
+        sensorPh.setData("01/06/2025");
+        sensorPh.setHora("12:00");
+        sensorPh.setPh("6.3");
 
-    @Test
-    void testMediana(){
-        List<Float> results = analiseService.mediana(lista);
-        for(float r : results){
-            assertEquals(1.4f, r);
-        }
-    }
+        Pluviometro pluvio = new Pluviometro();
+        pluvio.setData("01/06/2025");
+        pluvio.setHora("12:00");
+        pluvio.setMedidaDeChuvaCalculado("12,5");
 
-    @Test
-    void testModa(){
-        List<Float> results = analiseService.moda(lista);
-        for(float r : results){
-            assertEquals(1.2f, r);
-        }
-    }
+        DadosEstacao estacao = new DadosEstacao();
+        estacao.setTemperatura(27.0);
+        estacao.setUmidade(85.0);
+        estacao.setPressao(1013.0);
+        estacao.setLuz(300.0);
+        estacao.setGas(400.0);
+        estacao.setAr(90.0);
+        estacao.setVento(12.0);
+        estacao.setVolt(5.0);
+        estacao.setRpm(1500.0);
 
-    @Test
-    void testQ1(){
-        float result = analiseService.q1(lista);
-        assertEquals(1.2f, result);
-    }
+        when(sensorDeSoloRepository.findAll()).thenReturn(List.of(solo));
+        when(sensorDePhRepository.findAll()).thenReturn(List.of(sensorPh));
+        when(pluviometroRepository.findAll()).thenReturn(List.of(pluvio));
+        when(dadosEstacaoRepository.findAll()).thenReturn(List.of(estacao));
 
-    @Test
-    void testQ3(){
-        float result = analiseService.q3(lista);
-        assertEquals(1.65f, result, 0.01f);
-    }
+        // Execução
+        List<DadoSensorUnificado> resultado = analiseService.unificarDados();
 
-    @Test
-    void testExtrairValores(){
-        List<PlacaOutPut> dataOfPlaca = new ArrayList<>();
-        dataOfPlaca.addAll(List.of(new PlacaOutPut(25f), new PlacaOutPut(30f)));
-        List<Float> result = analiseService.extrairValores(dataOfPlaca, "temperatura");
-        assertEquals(25f, result.get(0), 0.0001f);
-        assertEquals(30f, result.get(1), 0.0001f);
-    }
+        // Verificação
+        assertEquals(1, resultado.size());
+        DadoSensorUnificado dado = resultado.get(0);
 
-    @Test
-    void testAnalise(){
-        PlacaOutPut p1 = new PlacaOutPut(new Date(new GregorianCalendar(2024, 1, 1, 12, 0).getTimeInMillis()), 20f, 50f);
-        PlacaOutPut p2 = new PlacaOutPut(new Date(new GregorianCalendar(2024, 1, 1, 13, 30).getTimeInMillis()), 30f, 100f);
-        List<PlacaOutPut> dados = List.of(p1, p2);
-        List<IntervaloTemporalEstatistico> dadosAnalisados = analiseService.analise(dados);
-
-        IntervaloTemporalEstatistico dadoAnalisado1 = dadosAnalisados.get(0);
-        Map<String, AnaliseEstatistica> mapDadoAnalisado1 = dadoAnalisado1.getMapaDados();
-        AnaliseEstatistica temperaturaDoDadoAnalisado1 = mapDadoAnalisado1.get("temperatura");
-        assertEquals(20f, temperaturaDoDadoAnalisado1.getMedia(), 0.01f);
-
-        IntervaloTemporalEstatistico dadoAnalisado2 = dadosAnalisados.get(1);
-        Map<String, AnaliseEstatistica> mapDadoAnalisado2 = dadoAnalisado2.getMapaDados();
-        AnaliseEstatistica umidadeDoDadoAnalisado2 = mapDadoAnalisado2.get("umidade");
-        assertEquals(100f, umidadeDoDadoAnalisado2.getMedia(), 0.01f);
+        assertEquals("01/06/2025", dado.getData());
+        assertEquals("12:00", dado.getHora());
+        assertEquals(27.0, dado.getTemperatura()); // DadosEstacao sobrescreve
+        assertEquals(85.0, dado.getUmidade());     // DadosEstacao sobrescreve
+        assertEquals(6.3, dado.getPh());           // SensorDePh sobrescreve
+        assertEquals(12.5, dado.getPluviometria());
+        assertEquals(1013.0, dado.getPressao());
+        assertEquals(300.0, dado.getLuminosidade());
+        assertEquals(400.0, dado.getCo2());
+        assertEquals(90.0, dado.getQualidadeAr());
+        assertEquals(12.0, dado.getVelocidadeVento());
+        assertEquals(5.0, dado.getVoltagem());
+        assertEquals(1500.0, dado.getRpm());
     }
 }

@@ -1,109 +1,209 @@
+/**
+ *
+ * Esta classe é um serviço Spring (`@Service`) responsável por realizar a unificação e análise estatística
+ * dos dados provenientes de diferentes sensores da aplicação: solo, pH, pluviômetro e estação meteorológica.
+ *
+ * Funcionalidades principais:
+ *
+ * 1. Unificação de Dados (método `unificarDados`):
+ *   - Coleta todos os registros dos sensores (via repositórios MongoDB).
+ *   - Agrupa e une os dados com base em data + hora, combinando informações de sensores diferentes em um único objeto DTO (`DadoSensorUnificado`).
+ *   - Preenche os campos do DTO com os valores mais recentes da estação meteorológica.
+ *   - Substitui valores nulos por `0.0` quando apropriado para evitar falhas ou inconsistências na análise.
+ *   - Retorna uma lista consolidada de medições para consumo por APIs ou análise.
+ *
+ * 2. Estatísticas básicas:
+ *   - `media(List<Float>)`: calcula a média de uma lista de valores float.
+ *   - `moda(List<Double>)`: retorna os valores mais frequentes (moda) de uma lista.
+ *   - `q1(List<Double>)` e `q3(List<Double>)`: retornam o primeiro e terceiro quartis.
+ *
+ * Detalhes técnicos:
+ * - Os dados são buscados dos repositórios MongoDB específicos para cada sensor.
+ * - A estrutura `Map<String, DadoSensorUnificado>` é usada para agrupar os dados por timestamp, onde a chave é uma combinação de `data + hora`.
+ * - O método `buscarUltimoDadoEstacao()` retorna o dado mais recente da estação, utilizado para preencher os campos climáticos (temperatura, umidade, etc).
+ * - Conversões de string para número são tratadas com o método utilitário `parseDouble()`, que também lida com vírgulas.
+ *
+ * Público-alvo:
+ * - Esta classe é usada principalmente pelo `MainController` (endpoint `/api/analise-completa`) para fornecer uma visualização integrada dos dados.
+ */
 package com.gpads.moringa.statistics;
 
-import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.gpads.moringa.dto.DadoSensorUnificado;
+import com.gpads.moringa.entities.*;
+import com.gpads.moringa.repositories.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.gpads.moringa.entities.PlacaOutPut;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 @Service
 public class AnaliseService {
 
-    public List<IntervaloTemporalEstatistico> analise(List<PlacaOutPut> dados) {
-        // Agrupar dados por intervalo de uma hora
-        Map<String, List<PlacaOutPut>> dadosAgrupados = dados.stream()
-                .collect(Collectors.groupingBy(p -> formatarDataHora(p.getDataHora())));
+    @Autowired
+    private SensorDeSoloRepositoryMongoDB sensorDeSoloRepository;
 
-        List<IntervaloTemporalEstatistico> resultado = new ArrayList<>();
+    @Autowired
+    private SensorDePhRepositoryMongoDB sensorDePhRepository;
 
-        for (Map.Entry<String, List<PlacaOutPut>> entry : dadosAgrupados.entrySet()) {
-            String intervalo = entry.getKey();
-            List<PlacaOutPut> dadosIntervalo = entry.getValue();
+    @Autowired
+    private PluviometroRepositoryMongoDB pluviometroRepository;
 
-            Map<String, AnaliseEstatistica> mapaDados = new HashMap<>();
+    @Autowired
+    private DadosEstacaoRepositoryMongoDB dadosEstacaoRepository;
 
-            // Campos numéricos para análise
-            String[] campos = {"temperatura", "umidade", "pressao", "luminosidade", "cO2", "qualidadeDoAr", "velocidadeDoVento", "voltagem", "rpm", "ph", "pluviometria"};
+    public AnaliseService(
+            SensorDeSoloRepositoryMongoDB sensorDeSoloRepository,
+            SensorDePhRepositoryMongoDB sensorDePhRepository,
+            PluviometroRepositoryMongoDB pluviometroRepository,
+            DadosEstacaoRepositoryMongoDB dadosEstacaoRepository) {
+        this.sensorDeSoloRepository = sensorDeSoloRepository;
+        this.sensorDePhRepository = sensorDePhRepository;
+        this.pluviometroRepository = pluviometroRepository;
+        this.dadosEstacaoRepository = dadosEstacaoRepository;
+    }
 
-            for (String campo : campos) {
-                List<Float> valores = extrairValores(dadosIntervalo, campo);
-                AnaliseEstatistica analise = new AnaliseEstatistica();
-                analise.setMedia(media(valores));
-                analise.setModa(moda(valores));
-                analise.setMediana(mediana(valores));
-                analise.setQ1(q1(valores));
-                analise.setq3(q3(valores));
+    public List<DadoSensorUnificado> unificarDados() {
+        List<SensorDeSolo> dadosSolo = sensorDeSoloRepository.findAll();
+        List<SensorDePh> dadosPh = sensorDePhRepository.findAll();
+        List<Pluviometro> dadosPluvio = pluviometroRepository.findAll();
+        DadosEstacao dadoEstacaoMaisRecente = buscarUltimoDadoEstacao();
+        Map<String, DadoSensorUnificado> mapa = new HashMap<>();
 
-                mapaDados.put(campo, analise);
+        // *** Debug para checar os dados do Pluviometro ***
+        System.out.println("### Dados de Pluviometro carregados do banco ###");
+        for (Pluviometro p : dadosPluvio) {
+            System.out.println("Data: " + p.getData()
+                    + ", Hora: " + p.getHora()
+                    + ", Medida de chuva (calculado): " + p.getMedidaDeChuvaCalculado());
+        }
+        System.out.println("### Fim dos dados de Pluviometro ###");
+
+        // Unir SensorDeSolo
+        for (SensorDeSolo solo : dadosSolo) {
+            String chave = solo.getData() + " " + solo.getHora();
+            DadoSensorUnificado dto = mapa.getOrDefault(chave, new DadoSensorUnificado());
+
+            dto.setData(solo.getData());
+            dto.setHora(solo.getHora());
+
+            try {
+                dto.setTemperatura(parseDouble(solo.getTemperatura()));
+                dto.setUmidade(parseDouble(solo.getUmidade()));
+                dto.setPh(parseDouble(solo.getPh()));
+
+                // dto.setCondutividade(parseDouble(solo.getCondutividade()));
+            } catch (Exception e) {
+                // log ou tratamento de erro
             }
 
-            IntervaloTemporalEstatistico intervaloEstatistico = new IntervaloTemporalEstatistico();
-            intervaloEstatistico.setIntervaloTempo(intervalo);
-            intervaloEstatistico.setMapaDados(mapaDados);
-
-            resultado.add(intervaloEstatistico);
+            mapa.put(chave, dto);
         }
 
-        return resultado;
+        // Unir SensorDePh
+        for (SensorDePh ph : dadosPh) {
+            String chave = ph.getData() + " " + ph.getHora();
+            DadoSensorUnificado dto = mapa.getOrDefault(chave, new DadoSensorUnificado());
+
+            dto.setData(ph.getData());
+            dto.setHora(ph.getHora());
+
+            try {
+                dto.setPh(parseDouble(ph.getPh()));
+            } catch (Exception e) {
+                // log ou tratamento de erro
+            }
+
+            mapa.put(chave, dto);
+        }
+
+        // Unir Pluviômetro
+        for (Pluviometro pluvio : dadosPluvio) {
+            String chave = pluvio.getData() + " " + pluvio.getHora();
+            DadoSensorUnificado dto = mapa.getOrDefault(chave, new DadoSensorUnificado());
+
+            dto.setData(pluvio.getData());
+            dto.setHora(pluvio.getHora());
+
+            dto.setPluviometriaFromString(pluvio.getMedidaDeChuvaCalculado());
+
+            mapa.put(chave, dto);
+        }
+
+        // Preencher os campos da DadosEstacao no DTO
+        for (DadoSensorUnificado dto : mapa.values()) {
+            if (dadoEstacaoMaisRecente != null) {
+                dto.setTemperatura(dadoEstacaoMaisRecente.getTemperatura()); // ainda veio
+                dto.setUmidade(dadoEstacaoMaisRecente.getUmidade()); // ainda veio
+                dto.setPressao(dadoEstacaoMaisRecente.getPressao());
+                dto.setLuminosidade(dadoEstacaoMaisRecente.getLuz());
+                dto.setCo2(dadoEstacaoMaisRecente.getGas());
+                dto.setQualidadeAr(dadoEstacaoMaisRecente.getAr());
+                dto.setVelocidadeVento(dadoEstacaoMaisRecente.getVento());
+                dto.setVoltagem(dadoEstacaoMaisRecente.getVolt());
+                dto.setRpm(dadoEstacaoMaisRecente.getRpm());
+            }
+
+            if (dto.getPluviometria() == null) {
+                dto.setPluviometria(0.0);
+            }
+            if(dto.getRpm() == null){
+                dto.setRpm(0.0);
+            }
+            if(dto.getVelocidadeVento() == null){
+                dto.setVelocidadeVento(0.0);
+            }
+        }
+
+        return new ArrayList<DadoSensorUnificado>(mapa.values());
+
     }
 
-    private String formatarDataHora(Date dataHora) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00");
-        return sdf.format(dataHora);
+    private DadosEstacao buscarUltimoDadoEstacao() {
+        List<DadosEstacao> todos = dadosEstacaoRepository.findAll();
+        if (todos.isEmpty())
+            return null;
+
+        // Pode ordenar se quiser garantir o mais recente
+        // Aqui pegamos o último
+
+        return todos.get(todos.size() - 1);
     }
 
-    public List<Float> extrairValores(List<PlacaOutPut> dados, String campo) {
-        return dados.stream()
-                .map(p -> {
-                    try {
-                        Field field = PlacaOutPut.class.getDeclaredField(campo);
-                        field.setAccessible(true);
-                        return (Float) field.get(p);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return 0f;
-                    }
-                })
-                .collect(Collectors.toList());
+    private Double parseDouble(String valor) {
+        if (valor == null || valor.trim().isEmpty())
+            return null;
+        return Double.parseDouble(valor.replace(",", "."));
     }
 
-    public float media(List<Float> d) {
+    public Double media(List<Float> d) {
+        if (d == null || d.isEmpty()) {
+            return null;
+        }
         float soma = d.stream().reduce(0.0f, Float::sum);
-        return soma / d.size();
+        return (double) soma / d.size();
     }
 
-    public List<Float> mediana(List<Float> d) {
-        Collections.sort(d);
-        int total = d.size();
-        List<Float> medianas = new ArrayList<>();
-        if (total % 2 == 0) {
-            medianas.add(d.get(total / 2));
-            medianas.add(d.get(total / 2 - 1));
-        } else {
-            medianas.add(d.get(total / 2));
+    public List<Double> moda(List<Double> d) {
+        if (d == null || d.isEmpty()) {
+            return null;
         }
-        return medianas;
-    }
 
-    public List<Float> moda(List<Float> d) {
-
-        Map<Float, Integer> frequencia = new HashMap<>();
+        Map<Double, Integer> frequencia = new HashMap<>();
         int maxFrequencia = 0;
-        for (Float ocorrencia : d) {
-            int count = frequencia.getOrDefault(ocorrencia, 0) + 1;
-            frequencia.put(ocorrencia, count);
+
+        for (Double valor : d) {
+            int count = frequencia.getOrDefault(valor, 0) + 1;
+            frequencia.put(valor, count);
             maxFrequencia = Math.max(maxFrequencia, count);
         }
-        List<Float> modas = new ArrayList<>();
-        for (Map.Entry<Float, Integer> entry : frequencia.entrySet()) {
+
+        List<Double> modas = new ArrayList<>();
+        for (Map.Entry<Double, Integer> entry : frequencia.entrySet()) {
             if (entry.getValue() == maxFrequencia) {
                 modas.add(entry.getKey());
             }
@@ -112,44 +212,56 @@ public class AnaliseService {
         return modas;
     }
 
-    public float q1(List<Float> d) {
-        if (d.size() == 1) {
-            return d.get(0);
+    public Double q1(List<Double> d) {
+        if (d == null || d.isEmpty()) {
+            return null;
         }
-        if (d.size() == 2) {
-            return d.get(1);
+
+        List<Double> ordenada = new ArrayList<>(d);
+        Collections.sort(ordenada);
+        double posicao = 0.25 * (ordenada.size() + 1);
+
+        if (posicao <= 1)
+            return ordenada.get(0);
+        if (posicao >= ordenada.size())
+            return ordenada.get(ordenada.size() - 1);
+
+        int indexInferior = (int) Math.floor(posicao) - 1;
+        int indexSuperior = (int) Math.ceil(posicao) - 1;
+
+        if (indexInferior == indexSuperior) {
+            return ordenada.get(indexInferior);
         }
-        Collections.sort(d);
-        double q1Aux = 0.25 * (d.size() + 1);
-        if (q1Aux % 1 == 0) {
-            return d.get((int) q1Aux - 1);
-        } else {
-            int indexInferior = (int) Math.floor(q1Aux) - 1;
-            int indexSuperior = (int) Math.ceil(q1Aux) - 1;
-            float valorInferior = d.get(indexInferior);
-            float valorSuperior = d.get(indexSuperior);
-            return (valorInferior + valorSuperior) / 2;
-        }
+
+        double valorInferior = ordenada.get(indexInferior);
+        double valorSuperior = ordenada.get(indexSuperior);
+        return (valorInferior + valorSuperior) / 2;
     }
 
-    public float q3(List<Float> d) {
-        if (d.size() == 1) {
-            return d.get(0);
+    public Double q3(List<Double> d) {
+        if (d == null || d.isEmpty()) {
+            return null;
         }
-        if (d.size() == 2) {
-            return d.get(1);
+
+        List<Double> ordenada = new ArrayList<>(d);
+        Collections.sort(ordenada);
+        double posicao = 0.75 * (ordenada.size() + 1);
+
+        if (posicao <= 1)
+            return ordenada.get(0);
+        if (posicao >= ordenada.size())
+            return ordenada.get(ordenada.size() - 1);
+
+        int indexInferior = (int) Math.floor(posicao) - 1;
+        int indexSuperior = (int) Math.ceil(posicao) - 1;
+
+        if (indexInferior == indexSuperior) {
+            return ordenada.get(indexInferior);
         }
-        Collections.sort(d);
-        double q3Aux = 0.75 * (d.size() + 1);
-        if (q3Aux % 1 == 0) {
-            return d.get((int) q3Aux - 1);
-        } else {
-            int indexInferior = (int) Math.floor(q3Aux) - 1;
-            int indexSuperior = (int) Math.ceil(q3Aux) - 1;
-            float valorInferior = d.get(indexInferior);
-            float valorSuperior = d.get(indexSuperior);
-            return (valorInferior + valorSuperior) / 2;
-        }
+
+        double valorInferior = ordenada.get(indexInferior);
+        double valorSuperior = ordenada.get(indexSuperior);
+        return (valorInferior + valorSuperior) / 2;
     }
 
 }

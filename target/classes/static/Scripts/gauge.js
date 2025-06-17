@@ -91,16 +91,27 @@ function colorRangeChange(min, max, value, etapa1, etapa2) {
     graficoRpm.style = colorRangeChange(0, 10000, listData.rpm, 3000, 7000);
 }
 // Dados de exemplo
-const listData = {
-    temperatura: 21.24,
-    umidade: 51.58,
-    pressao: 1021.52,
-    luz: 5031,
-    gas: 7.3,
-    ar: 11.7,
-    velocidadeVento: 0,
-    voltagem: 0.8719999,
-    rpm: 0
-};
+const listData = {};
 
-preencherGrafico(listData);
+fetch('/api/analise-completa') // Endpoint correto
+  .then(res => res.json())
+  .then(data => {
+    // Preenche o listData com os valores vindos do backend
+    Object.assign(listData, {
+      temperatura: data.temperatura,
+      umidade: data.umidade,
+      pressao: data.pressao,
+      luz: data.luz,
+      gas: data.gas,
+      ar: data.ar,
+      velocidadeVento: data.velocidadeVento,
+      voltagem: data.voltagem,
+      rpm: data.rpm
+    });
+
+    preencherGrafico(listData);
+  })
+
+  .catch(error => {
+    console.error("Erro ao buscar dados da análise completa:", error);
+  });
