@@ -13,7 +13,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://interface-morhinga.vercel.app/")
+                        .allowedOrigins(
+                            "https://interface-morhinga.vercel.app",
+                            "http://localhost:8080" // útil para testes locais
+                            )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }

@@ -159,6 +159,70 @@ public class AnaliseService {
             }
         }
 
+        int countComZero = 0;
+        int countComDados = 0;
+
+        for (DadoSensorUnificado dto : mapa.values()) {
+            boolean temZero = false;
+            StringBuilder camposZero = new StringBuilder();
+
+            if (dto.getTemperatura() == null || dto.getTemperatura() == 0.0) {
+                temZero = true;
+                camposZero.append("temperatura ");
+            }
+            if (dto.getUmidade() == null || dto.getUmidade() == 0.0) {
+                temZero = true;
+                camposZero.append("umidade ");
+            }
+            if (dto.getPressao() == null || dto.getPressao() == 0.0) {
+                temZero = true;
+                camposZero.append("pressao ");
+            }
+            if (dto.getLuminosidade() == null || dto.getLuminosidade() == 0.0) {
+                temZero = true;
+                camposZero.append("luminosidade ");
+            }
+            if (dto.getCo2() == null || dto.getCo2() == 0.0) {
+                temZero = true;
+                camposZero.append("co2 ");
+            }
+            if (dto.getQualidadeAr() == null || dto.getQualidadeAr() == 0.0) {
+                temZero = true;
+                camposZero.append("qualidadeAr ");
+            }
+            if (dto.getVelocidadeVento() == null || dto.getVelocidadeVento() == 0.0) {
+                temZero = true;
+                camposZero.append("velocidadeVento ");
+            }
+            if (dto.getVoltagem() == null || dto.getVoltagem() == 0.0) {
+                temZero = true;
+                camposZero.append("voltagem ");
+            }
+            if (dto.getRpm() == null || dto.getRpm() == 0.0) {
+                temZero = true;
+                camposZero.append("rpm ");
+            }
+            if (dto.getPh() == null || dto.getPh() == 0.0) {
+                temZero = true;
+                camposZero.append("ph ");
+            }
+            if (dto.getPluviometria() == null || dto.getPluviometria() == 0.0) {
+                temZero = true;
+                camposZero.append("pluviometria ");
+            }
+
+            if (temZero) {
+                countComZero++;
+                System.out.println("Dado com zero ou nulo nos campos: " + camposZero.toString());
+            } else {
+                countComDados++;
+            }
+        }
+
+        System.out.println("Total de objetos com ao menos um campo zero ou nulo: " + countComZero);
+        System.out.println("Total de objetos com dados preenchidos: " + countComDados);
+
+
         return new ArrayList<DadoSensorUnificado>(mapa.values());
 
     }
