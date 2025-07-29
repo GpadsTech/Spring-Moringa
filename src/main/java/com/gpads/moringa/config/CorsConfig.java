@@ -13,10 +13,14 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
+<<<<<<< HEAD
                         .allowedOrigins(
                             "https://interface-morhinga.vercel.app",
                             "https://*.app.github.dev" // útil para testes locais
                             )
+=======
+                        .allowedOrigins("https://interface-morhinga.vercel.app/")
+>>>>>>> parent of d36ba4c (corrigindo configurações)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
