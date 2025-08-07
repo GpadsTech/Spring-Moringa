@@ -28,12 +28,18 @@
  */
 package com.gpads.moringa.statistics;
 
+import com.gpads.moringa.dto.DadoSensorUnificado;
 import com.gpads.moringa.entities.*;
 import com.gpads.moringa.repositories.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 @Service
 public class AnaliseService {
@@ -61,85 +67,110 @@ public class AnaliseService {
         this.dadosEstacaoRepository = dadosEstacaoRepository;
     }
 
-    public List<Map<String, Object>> unificarDados() {
+    public List<DadoSensorUnificado> unificarDados() {
         List<SensorDeSolo> dadosSolo = sensorDeSoloRepository.findAll();
         List<SensorDePh> dadosPh = sensorDePhRepository.findAll();
         List<Pluviometro> dadosPluvio = pluviometroRepository.findAll();
         DadosEstacao dadoEstacaoMaisRecente = buscarUltimoDadoEstacao();
+        Map<String, DadoSensorUnificado> mapa = new HashMap<>();
 
-        Map<String, Map<String, Object>> mapa = new HashMap<>();
+        // *** Debug para checar os dados do Pluviometro ***
+        System.out.println("### Dados de Pluviometro carregados do banco ###");
+        for (Pluviometro p : dadosPluvio) {
+            System.out.println("Data: " + p.getData()
+                    + ", Hora: " + p.getHora()
+                    + ", Medida de chuva (calculado): " + p.getMedidaDeChuvaCalculado());
+        }
+        System.out.println("### Fim dos dados de Pluviometro ###");
 
+        // Unir SensorDeSolo
         for (SensorDeSolo solo : dadosSolo) {
             String chave = solo.getData() + " " + solo.getHora();
-            Map<String, Object> dado = mapa.getOrDefault(chave, new HashMap<>());
+            DadoSensorUnificado dto = mapa.getOrDefault(chave, new DadoSensorUnificado());
 
-            dado.put("data", solo.getData());
-            dado.put("hora", solo.getHora());
+            dto.setData(solo.getData());
+            dto.setHora(solo.getHora());
 
-            dado.put("temperatura", parseDouble(solo.getTemperatura()));
-            dado.put("umidade", parseDouble(solo.getUmidade()));
-            dado.put("ph", parseDouble(solo.getPh()));
-            dado.put("condutividade", parseDouble(solo.getCondutividade()));
+            try {
+                dto.setTemperatura(parseDouble(solo.getTemperatura()));
+                dto.setUmidade(parseDouble(solo.getUmidade()));
+                dto.setPh(parseDouble(solo.getPh()));
 
-            mapa.put(chave, dado);
+                // dto.setCondutividade(parseDouble(solo.getCondutividade()));
+            } catch (Exception e) {
+                // log ou tratamento de erro
+            }
+
+            mapa.put(chave, dto);
         }
 
+        // Unir SensorDePh
         for (SensorDePh ph : dadosPh) {
             String chave = ph.getData() + " " + ph.getHora();
-            Map<String, Object> dado = mapa.getOrDefault(chave, new HashMap<>());
+            DadoSensorUnificado dto = mapa.getOrDefault(chave, new DadoSensorUnificado());
 
-            dado.put("data", ph.getData());
-            dado.put("hora", ph.getHora());
-            dado.put("ph", parseDouble(ph.getPh()));
+            dto.setData(ph.getData());
+            dto.setHora(ph.getHora());
 
-            mapa.put(chave, dado);
+            try {
+                dto.setPh(parseDouble(ph.getPh()));
+            } catch (Exception e) {
+                // log ou tratamento de erro
+            }
+
+            mapa.put(chave, dto);
         }
 
+        // Unir Pluviômetro
         for (Pluviometro pluvio : dadosPluvio) {
             String chave = pluvio.getData() + " " + pluvio.getHora();
-            Map<String, Object> dado = mapa.getOrDefault(chave, new HashMap<>());
+            DadoSensorUnificado dto = mapa.getOrDefault(chave, new DadoSensorUnificado());
 
-            dado.put("data", pluvio.getData());
-            dado.put("hora", pluvio.getHora());
-            dado.put("pluviometria", parseDouble(pluvio.getMedidaDeChuvaCalculado()));
+            dto.setData(pluvio.getData());
+            dto.setHora(pluvio.getHora());
 
-            mapa.put(chave, dado);
+            dto.setPluviometriaFromString(pluvio.getMedidaDeChuvaCalculado());
+
+            mapa.put(chave, dto);
         }
 
-        for (Map<String, Object> dado : mapa.values()) {
-            String chave = "";
+        // Preencher os campos da DadosEstacao no DTO
+        for (DadoSensorUnificado dto : mapa.values()) {
             if (dadoEstacaoMaisRecente != null) {
-                chave = dadoEstacaoMaisRecente.getData() + " " + dadoEstacaoMaisRecente.getHora();
-                dado.put("data", dadoEstacaoMaisRecente.getData());
-                dado.put("hora", dadoEstacaoMaisRecente.getHora());
-                dado.put("temperaturaEstacao", dadoEstacaoMaisRecente.getTemperatura());
-                dado.put("umidadeEstacao", dadoEstacaoMaisRecente.getUmidade());
-                dado.put("pressao", dadoEstacaoMaisRecente.getPressao());
-                dado.put("luminosidade", dadoEstacaoMaisRecente.getLuz());
-                dado.put("co2", dadoEstacaoMaisRecente.getGas());
-                dado.put("qualidadeAr", dadoEstacaoMaisRecente.getAr());
-                dado.put("velocidadeVento", dadoEstacaoMaisRecente.getVento());
-                dado.put("voltagem", dadoEstacaoMaisRecente.getVolt());
-                dado.put("rpm", dadoEstacaoMaisRecente.getRpm());
-
+                dto.setTemperatura(dadoEstacaoMaisRecente.getTemperatura()); // ainda veio
+                dto.setUmidade(dadoEstacaoMaisRecente.getUmidade()); // ainda veio
+                dto.setPressao(dadoEstacaoMaisRecente.getPressao());
+                dto.setLuminosidade(dadoEstacaoMaisRecente.getLuz());
+                dto.setCo2(dadoEstacaoMaisRecente.getGas());
+                dto.setQualidadeAr(dadoEstacaoMaisRecente.getAr());
+                dto.setVelocidadeVento(dadoEstacaoMaisRecente.getVento());
+                dto.setVoltagem(dadoEstacaoMaisRecente.getVolt());
+                dto.setRpm(dadoEstacaoMaisRecente.getRpm());
             }
-            mapa.put(chave, dado);
 
-            // Preencher valores padrão para evitar null
-            /*
-             * dado.putIfAbsent("pluviometria", 0.0);
-             * dado.putIfAbsent("rpm", 0.0);
-             * dado.putIfAbsent("velocidadeVento", 0.0);
-             */
+            if (dto.getPluviometria() == null) {
+                dto.setPluviometria(0.0);
+            }
+            if(dto.getRpm() == null){
+                dto.setRpm(0.0);
+            }
+            if(dto.getVelocidadeVento() == null){
+                dto.setVelocidadeVento(0.0);
+            }
         }
 
-        return new ArrayList<>(mapa.values());
+        return new ArrayList<DadoSensorUnificado>(mapa.values());
+
     }
 
     private DadosEstacao buscarUltimoDadoEstacao() {
         List<DadosEstacao> todos = dadosEstacaoRepository.findAll();
         if (todos.isEmpty())
             return null;
+
+        // Pode ordenar se quiser garantir o mais recente
+        // Aqui pegamos o último
+
         return todos.get(todos.size() - 1);
     }
 

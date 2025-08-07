@@ -1,6 +1,7 @@
 /workspaces/Spring-Moringa/src/main/java/com/gpads/moringa/MoringaApplication.java
 /workspaces/Spring-Moringa/src/main/java/com/gpads/moringa/config/CorsConfig.java
 /workspaces/Spring-Moringa/src/main/java/com/gpads/moringa/controller/MainController.java
+/workspaces/Spring-Moringa/src/main/java/com/gpads/moringa/dto/DadoSensorUnificado.java
 /workspaces/Spring-Moringa/src/main/java/com/gpads/moringa/entities/DadosEstacao.java
 /workspaces/Spring-Moringa/src/main/java/com/gpads/moringa/entities/Pluviometro.java
 /workspaces/Spring-Moringa/src/main/java/com/gpads/moringa/entities/Reservatorios.java
